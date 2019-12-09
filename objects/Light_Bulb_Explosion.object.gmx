@@ -68,5 +68,8 @@ image_speed = 0.15;
   <PhysicsObjectFriction>0.200000002980232</PhysicsObjectFriction>
   <PhysicsObjectAwake>-1</PhysicsObjectAwake>
   <PhysicsObjectKinematic>0</PhysicsObjectKinematic>
-  <PhysicsShapePoints/>
+  <PhysicsShapePoints>
+    <point>33,67</point>
+    <point>34,34</point>
+  </PhysicsShapePoints>
 </object>
