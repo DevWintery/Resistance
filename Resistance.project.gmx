@@ -49,17 +49,15 @@
         </sprites>
       </sprites>
       <sprites name="Robot">
-        <sprites name="Attack">
-          <sprite>sprites\Spr_Robot_Attack</sprite>
-          <sprite>sprites\Spr_Robot_Die</sprite>
-          <sprite>sprites\Spr_Robot_Walk</sprite>
-        </sprites>
+        <sprite>sprites\Spr_Robot_Attack</sprite>
+        <sprite>sprites\Spr_Robot_Die</sprite>
+        <sprite>sprites\Spr_Robot_Walk</sprite>
+        <sprite>sprites\Spr_Robot_Bullet</sprite>
       </sprites>
     </sprites>
   </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
-  <scripts name="scripts"/>
   <objects name="objects">
     <object>objects\Player</object>
     <objects name="HitBox">
@@ -71,6 +69,8 @@
     <objects name="Monster">
       <object>objects\Light_Bulb_Explosion</object>
       <object>objects\Light_Bulb_Warm</object>
+      <object>objects\Robot</object>
+      <object>objects\Bullet</object>
     </objects>
     <objects name="Object">
       <object>objects\Wall</object>

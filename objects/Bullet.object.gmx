@@ -28,7 +28,7 @@
             <string>///Variables
 
 dir = 1;
-spd = 2;
+spd = 6;
 </string>
           </argument>
         </arguments>
@@ -51,7 +51,9 @@ spd = 2;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>//x += dir * spd;
+            <string>x += -dir * spd;
+
+image_xscale = -dir;
 </string>
           </argument>
         </arguments>
