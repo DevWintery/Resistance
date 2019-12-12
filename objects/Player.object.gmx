@@ -31,21 +31,28 @@ global.timeValue = 1;
 //global.Lunching_Arm = false;
 jumping = false;
 isAttacking = false;
+isJumpAttacking = false;
 isClickNextAttack = false;
 attackIndex = 0;
 isDie = false;
+isFaring = false;
 
 spd = 4;
 grav = 1;
-jspd = 12;
+jspd = 14;
 vspd = 0;
 hspd = 0;
 
-hp = 5;
+hp = 5000;
 
 invuln = 0;
 fadeStep = -0.1;
- 
+shakePower = 5;
+shakeTime = 10;
+shake = false;
+
+originalXView = view_xview;
+originalYView = view_yview;
 </string>
           </argument>
         </arguments>
@@ -69,6 +76,29 @@ fadeStep = -0.1;
             <string>///Initalization
 
 image_speed = 0.15;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="1">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>isFaring = false;
 </string>
           </argument>
         </arguments>
@@ -131,6 +161,12 @@ if(place_meeting(x, y+1, Wall))
         vspd = -jspd;
         jumping = true;
     }
+    else if(isJumpAttacking)
+    {
+        isJumpAttacking = false;
+        sprite_index = Spr_Player_Pull_Down_Smash;
+        shake = true;
+    }
 }
 else
 {
@@ -163,7 +199,7 @@ if(right &amp;&amp; !isAttacking)
     hspd = spd;
 }
 
-if( (!left &amp;&amp; !right) || (left &amp;&amp; right) || isAttacking)
+if( (!left &amp;&amp; !right) || (left &amp;&amp; right) || isAttacking || isFaring)
 {
     hspd = 0;
 }
@@ -206,6 +242,10 @@ if(isDie)
 {
     image_speed = 0.075 * global.timeValue;
     sprite_index = Spr_Player_Die;
+}
+else if(isFaring)
+{
+    sprite_index = Spr_Player_Faring;
 }
 else if(left &amp;&amp; right)
 {
@@ -291,6 +331,75 @@ if (invuln == 0)
           </argument>
         </arguments>
       </action>
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>///Shake Screen
+
+if(shake)
+{
+    shakeTime --;
+    view_xview += choose(-shakePower, shakePower);
+    view_yview += choose(-shakePower, shakePower);
+    grav = 7;
+    
+    if(shakeTime &lt;= 0)
+    {
+        shakeTime = 5;
+        shake = false;
+    }
+}
+else
+{
+    view_xview = approach(view_xview,0,0.3);
+    view_yview = approach(view_yview,0,0.3);
+    grav = 1;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="6" enumb="54">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>if( !jumping &amp;&amp; !isAttacking)
+{
+    isFaring = true;
+
+    alarm[1] = 10;
+}
+</string>
+          </argument>
+        </arguments>
+      </action>
     </event>
     <event eventtype="6" enumb="53">
       <action>
@@ -310,7 +419,7 @@ if (invuln == 0)
           <argument>
             <kind>1</kind>
             <string>///Attack
-if(isAttacking)
+if(isAttacking &amp;&amp; !isJumpAttacking)
 {
     isClickNextAttack = true;
 }
@@ -322,6 +431,13 @@ else if(!jumping)
     var ins = instance_create(x, y, Player_Attack_Once);
     ins.image_xscale = image_xscale;
     image_index = 0;
+}
+else if(jumping)
+{
+    isAttacking = true;
+    isJumpAttacking = true;
+    
+    sprite_index = Spr_Player_Pull_Down;
 }
 </string>
           </argument>
@@ -345,7 +461,12 @@ else if(!jumping)
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if(!isClickNextAttack &amp;&amp; ( sprite_index == Spr_Player_Attack_Once || sprite_index == Spr_Player_Attack_Twice || sprite_index == Spr_Player_Attack_Thrice) )
+            <string>if(sprite_index == Spr_Player_Pull_Down_Smash)
+{
+    isAttacking = false;
+}
+
+if(!isClickNextAttack &amp;&amp; ( sprite_index == Spr_Player_Attack_Once || sprite_index == Spr_Player_Attack_Twice || sprite_index == Spr_Player_Attack_Thrice) )
 {
     isAttacking = false;
     isClickNextAttack = false;
